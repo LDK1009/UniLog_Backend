@@ -14,7 +14,7 @@ class User extends Sequelize.Model {
           unique: true,
         },
         // email 필드: 부호 없는 정수, null 허용하지 않음
-        email: {
+        uid: {
           type: Sequelize.STRING(100),
           allowNull: false,
         },

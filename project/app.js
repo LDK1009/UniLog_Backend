@@ -16,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-// 세션 세팅
+// 세션 객체 초기화
 app.use(
   session({
     name:'sessionId',
@@ -46,6 +46,10 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
+
+app.post("/signup", (req, res, next)=>{
+  res.json(req.body);
+})
 // 서버 실행
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
