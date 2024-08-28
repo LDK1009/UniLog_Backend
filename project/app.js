@@ -5,6 +5,10 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const { sequelize } = require("./models/index");
 
+
+// 라우터 임포트
+const signUpRoutes = require('./routes/sign-up');
+
 // 익스프레스 객체 생성
 const app = express();
 
@@ -28,6 +32,9 @@ app.use(
   })
 );
 
+// 라우터
+app.use('/sign-up', signUpRoutes);
+
 app.get("/", (req, res, next) => {
   if (req.session.user) {
     // 세션에 유저가 존재한다면
@@ -46,10 +53,6 @@ app.get("/", (req, res) => {
   res.send("hello world");
 });
 
-
-app.post("/signup", (req, res, next)=>{
-  res.json(req.body);
-})
 // 서버 실행
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
