@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-// const userController = require('../../controllers/users/userController');
+const userController = require('../../controller/users/userController');
 
 // 모든 사용자 조회
 // router.get('/', userController.getAllUsers);
@@ -17,7 +17,7 @@ const router = express.Router();
 // // 사용자 삭제
 // router.delete('/:userId', userController.deleteUser);
 
-// // ID 중복 확인
-// router.get('/check-duplicate/:userId', userController.checkDuplicateUser);
+// ID 중복 확인
+router.post('/check-duplicate', userController.checkDuplicateUser);
 
 module.exports = router;
