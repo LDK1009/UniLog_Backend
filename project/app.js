@@ -3,7 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-const { sequelize } = require("./models/index");
 const morgan = require("morgan");
 
 // 라우터 임포트
@@ -43,36 +42,6 @@ app.use(
 
 // 라우터
 app.use("/", indexRoutes);
-
-// 세션 검증 미들웨어
-app.use((req, res) => {
-  if (req.session && req.session.user) {
-    // 세션이 유효한 경우
-    res.json({ redirectUrl: "/main" });
-  } else {
-    // 세션이 없는 경우 또는 유효하지 않은 경우
-    res.json({ redirectUrl: "/sign-in" });
-  }
-});
-
-app.get("/", (req, res, next) => {
-  if (req.session.user) {
-    // 세션에 유저가 존재한다면
-    res.json(`
-      success : false,세션이 이미 있는뎁쇼?\n${req.session.user.name}`);
-  } else {
-    req.session.user = { name: "John Doe", authenticated: true };
-    res.send("이녀석 ㅋㅋ 세  션이 없구나~ 내가 세션을 줄게~");
-  }
-});
-
-app.get("/main", (req, res) => {
-  res.send("메인이다옹~");
-});
-
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
 
 // 서버 실행
 app.listen(port, () => {
