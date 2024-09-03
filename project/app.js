@@ -4,10 +4,10 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const { sequelize } = require("./models/index");
-
+const morgan = require("morgan");
 
 // 라우터 임포트
-const indexRoutes = require('./routes/index.js');
+const indexRoutes = require("./routes/index.js");
 
 // 익스프레스 객체 생성
 const app = express();
@@ -15,15 +15,24 @@ const app = express();
 // 포트 설정
 const port = 3001;
 
-// 미들웨어 추가
+// 미들웨어
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
+app.use(morgan("dev"));
+
+// 에러 핸들러
+app.use((err, req, res, next) => {
+  res.status(500).send({
+    message: "Server Error",
+    error: err,
+  });
+});
 
 // 세션 객체 초기화
 app.use(
   session({
-    name:'sessionId',
+    name: "sessionId",
     secret: "soonCoding",
     resave: false, // 세션이 수정될 때만 다시 저장
     saveUninitialized: false, // 세션이 초기화되어 있을 때만 저장
@@ -33,26 +42,26 @@ app.use(
 );
 
 // 라우터
-app.use('/', indexRoutes);
-
+app.use("/", indexRoutes);
 
 // 세션 검증 미들웨어
 app.use((req, res) => {
   if (req.session && req.session.user) {
-      // 세션이 유효한 경우
-      res.json({ redirectUrl: '/main' });
+    // 세션이 유효한 경우
+    res.json({ redirectUrl: "/main" });
   } else {
-      // 세션이 없는 경우 또는 유효하지 않은 경우
-      res.json({ redirectUrl: '/sign-in' });
+    // 세션이 없는 경우 또는 유효하지 않은 경우
+    res.json({ redirectUrl: "/sign-in" });
   }
 });
 
 app.get("/", (req, res, next) => {
   if (req.session.user) {
     // 세션에 유저가 존재한다면
-    res.send(`세션이 이미 있는뎁쇼?\n${req.session.user.name}`);
+    res.json(`
+      success : false,세션이 이미 있는뎁쇼?\n${req.session.user.name}`);
   } else {
-    req.session.user = { name: 'John Doe', authenticated: true };
+    req.session.user = { name: "John Doe", authenticated: true };
     res.send("이녀석 ㅋㅋ 세  션이 없구나~ 내가 세션을 줄게~");
   }
 });
