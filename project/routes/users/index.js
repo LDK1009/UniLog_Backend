@@ -3,7 +3,7 @@ const router = express.Router();
 const userController = require('../../controller/users/userController');
 
 // 모든 사용자 조회
-// router.get('/', userController.getAllUsers);
+router.get('/', userController.getAllUsers);
 
 // // 특정 사용자 조회
 // router.get('/:userId', userController.getUserById);

@@ -1,26 +1,30 @@
 const { User } = require("../../models/index");
+const wrapAsyncController = require("../../utills/wrapAsyncController");
 
-exports.getAllUsers = (req, res) => {
-  // 모든 사용자 정보 반환
-  res.send("모든 사용자 정보 반환");
-};
+exports.getAllUsers = wrapAsyncController(async (req, res) => {
+    const datas = await User.findAll();
+    res.status(201).json(datas);
+});
 
 exports.checkDuplicateUser = async (req, res) => {
   try {
     const { uid } = req.body;
-    const users = await User.findAll({
-        attributes: ["password"],
-        where: { uid: uid },
+    const datas = await User.findAll({
+      attributes: ["uid"],
+      where: { uid: uid },
     });
-    // const users = await User.findAll();
-    // console.log("checkDuplicateUser 실행!");
-    console.log(users[0].dataValues.password);
-    res.send(`사용자 중복 확인 기능 실행! ${users[0].dataValues.password}`);
+    const users = datas.map((el) => el.dataValues.uid);
+
+    if (users.length < 1) {
+      res.json(true);
+    } else {
+      res.json(false);
+    }
   } catch (error) {
-    res.send(`에러 발생! ${error}`);
+    res.json(`에러 발생! ${error}`);
   }
 };
 
 exports.createUser = (req, res) => {
-  res.send("사용자 생성");
+  res.json("사용자 생성");
 };
