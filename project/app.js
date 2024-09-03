@@ -7,7 +7,7 @@ const { sequelize } = require("./models/index");
 
 
 // 라우터 임포트
-const signUpRoutes = require('./routes/sign-up');
+const indexRoutes = require('./routes/index.js');
 
 // 익스프레스 객체 생성
 const app = express();
@@ -33,7 +33,19 @@ app.use(
 );
 
 // 라우터
-app.use('/sign-up', signUpRoutes);
+app.use('/', indexRoutes);
+
+
+// 세션 검증 미들웨어
+app.use((req, res) => {
+  if (req.session && req.session.user) {
+      // 세션이 유효한 경우
+      res.json({ redirectUrl: '/main' });
+  } else {
+      // 세션이 없는 경우 또는 유효하지 않은 경우
+      res.json({ redirectUrl: '/sign-in' });
+  }
+});
 
 app.get("/", (req, res, next) => {
   if (req.session.user) {
