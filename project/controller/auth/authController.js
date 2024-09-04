@@ -1,15 +1,16 @@
 const wrapAsyncController = require("../../utills/wrapAsyncController");
 const { User } = require("../../models/index");
 
-// 로그인
+//// 로그인
 exports.signIn = wrapAsyncController(async (req, res) => {
   const { uid, password } = req.body;
 
   const userData = await User.findOne({ where: { uid: uid, password: password } });
   req.session.user = { ...userData.dataValues, authenticated: true };
-  res.json(userData);
+  res.json({redirectUrl : "/main"});
 });
 
+//// 회원가입
 exports.signUp = wrapAsyncController(async (req, res) => {
   const { uid } = req.body;
 
